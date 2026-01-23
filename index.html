@@ -11,18 +11,16 @@
     <script src="https://unpkg.com/@rive-app/canvas"></script>
     <script>
       const r = new rive.Rive({
-        src: "data_binding_test.riv",
+        src: "logo.riv",
         canvas: document.getElementById("canvas"),
         autoBind: true,
         autoplay: true,
-        // artboard: "Arboard", // Optional. If not supplied the default is selected
-        stateMachines: "State Machine",
+        stateMachines: "State Machine 1",
+        layout: new rive.Layout({
+          alignment: rive.Alignment.TopLeft,
+        }),
         onLoad: () => {
-            // Ensure the drawing surface matches the canvas size and device pixel ratio
             r.resizeDrawingSurfaceToCanvas();
-            // Access the current instance that was auto-bound
-            let boundInstance = rive.viewModelInstance;
-            // test
         },
       });
     </script>
