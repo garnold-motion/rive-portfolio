@@ -1,17 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rive Hello World</title>
+    <title>Elite Speakers</title>
+
+    <style>
+
+      /* Mobile First */
+      .logo-container {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        width: 180px;
+        height: auto;
+    }
+
+    /* Desktop Screen */
+    @media (min-width: 768px) {
+      .logo-container {
+        position: absolute;
+        top: 25px;
+        left: 25px;
+        width: 280px;
+        height: auto;
+      }
+    }
+
+      body {
+          background-color: #1a1a1a;
+      }
+
+      #canvas {
+          width: 100%;
+          height: auto;
+          display: block;
+      }
+    </style>
+
   </head>
   <body>
-    <canvas id="canvas" width="500" height="500"></canvas>
+
+    <div class="logo-container">
+        <canvas id="canvas"></canvas>
+    </div>
 
     <script src="https://unpkg.com/@rive-app/canvas"></script>
     <script>
+
       const r = new rive.Rive({
-        src: "logo.riv",
+        src: "elite_speakers_logo.riv",
         canvas: document.getElementById("canvas"),
         autoBind: true,
         autoplay: true,
@@ -23,6 +62,11 @@
             r.resizeDrawingSurfaceToCanvas();
         },
       });
+
+      window.addEventListener('resize', () => {
+        r.resizeDrawingSurfaceToCanvas();
+      });
+
     </script>
   </body>
 </html>
