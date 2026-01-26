@@ -1,57 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Elite Speakers</title>
 
     <style>
+      body {
+          background-color: #1a1a1a;
+          margin: 0;
+          padding: 0;
+          overflow-x: hidden;
+      }
 
-      /* Mobile First */
+      /* 1. The Floating Logo */
       .logo-container {
         position: absolute;
         top: 15px;
         left: 15px;
         width: 180px;
-        height: auto;
-    }
-
-    /* Desktop Screen */
-    @media (min-width: 768px) {
-      .logo-container {
-        position: absolute;
-        top: 25px;
-        left: 25px;
-        width: 280px;
-        height: auto;
-      }
-    }
-
-      body {
-          background-color: #1a1a1a;
+        z-index: 10;
       }
 
-      #canvas {
-          width: 100%;
-          height: auto;
+      /* Adjust logo for phone screen */
+      @media (min-width: 768px) {
+        .logo-container {
+          top: 25px;
+          left: 25px;
+          width: 280px;
+        }
+      }
+
+      /* 2. The Hero Section (The Window) */
+      .hero-container {
+        width: 100vw; 
+        height: 100vh;
+        display: flex;
+        align-items: center; 
+        justify-content: center;
+        background-color: #1a1a1a;
+      }
+
+      canvas {
           display: block;
       }
-    </style>
 
-  </head>
-  <body>
+      #hero-canvas {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+      }
+
+      #logo-canvas {
+          width: 100%;
+          height: auto;
+      }
+    </style>
+</head>
+
+<body>
 
     <div class="logo-container">
-        <canvas id="canvas"></canvas>
+        <canvas id="logo-canvas"></canvas>
+    </div>
+
+    <div class="hero-container">
+        <canvas id="hero-canvas"></canvas>
     </div>
 
     <script src="https://unpkg.com/@rive-app/canvas"></script>
     <script>
 
-      const r = new rive.Rive({
+      // Init Logo
+      const logo = new rive.Rive({
         src: "elite_speakers_logo.riv",
-        canvas: document.getElementById("canvas"),
+        canvas: document.getElementById("logo-canvas"),
         autoBind: true,
         autoplay: true,
         stateMachines: "State Machine 1",
@@ -59,14 +82,36 @@
           alignment: rive.Alignment.TopLeft,
         }),
         onLoad: () => {
-            r.resizeDrawingSurfaceToCanvas();
+            logo.resizeDrawingSurfaceToCanvas();
         },
       });
 
-      window.addEventListener('resize', () => {
-        r.resizeDrawingSurfaceToCanvas();
-      });
+      // Init Hero Section
+      const hero = new rive.Rive({
+        src: "elite_speakers_hero_v1.riv",
+        canvas: document.getElementById("hero-canvas"),
+        autoBind: true,
+        autoplay: true,
+        stateMachines: "State Machine 1",
+        onLoad: () => {
 
+          hero.resizeDrawingSurfaceToCanvas();
+
+          const vmi = hero.viewModelInstance;
+
+          if (vmi) {
+              const randomStart = Math.floor(Math.random() * 6) + 1;
+              vmi.number("numberProperty").value = randomStart;
+              console.log("ViewModel set to photo:", randomStart);
+          }
+        },
+
+      });
+      
+      window.addEventListener('resize', () => {
+        logo.resizeDrawingSurfaceToCanvas();
+        hero.resizeDrawingSurfaceToCanvas();
+      });
     </script>
-  </body>
+</body>
 </html>
