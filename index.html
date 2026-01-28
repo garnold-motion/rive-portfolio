@@ -15,30 +15,18 @@
 
       /* 1. The Floating Logo */
       .logo-container {
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        width: 180px;
+        position: relative; 
+        padding: 30px 0 30px 30px;
+        width: 300px;
         z-index: 10;
-      }
-
-      /* Adjust logo for phone screen */
-      @media (min-width: 768px) {
-        .logo-container {
-          top: 25px;
-          left: 25px;
-          width: 280px;
-        }
       }
 
       /* 2. The Hero Section (The Window) */
       .hero-container {
-        width: 100vw; 
-        height: 100vh;
-        display: flex;
-        align-items: center; 
-        justify-content: center;
-        background-color: #1a1a1a;
+        width: 100%; 
+        height: 75vh;
+        display: block;
+        overflow: hidden;
       }
 
       canvas {
@@ -48,7 +36,6 @@
       #hero-canvas {
           width: 100%;
           height: 100%;
-          object-fit: contain;
       }
 
       #logo-canvas {
@@ -57,6 +44,7 @@
       }
     </style>
 </head>
+
 
 <body>
 
@@ -73,7 +61,7 @@
 
       // Init Logo
       const logo = new rive.Rive({
-        src: "elite_speakers_logo.riv",
+        src: "elite_speakers_logo_v1.riv",
         canvas: document.getElementById("logo-canvas"),
         autoBind: true,
         autoplay: true,
@@ -88,8 +76,13 @@
 
       // Init Hero Section
       const hero = new rive.Rive({
-        src: "elite_speakers_hero_v1.riv",
+        src: "elite_speakers_hero_v2.riv",
         canvas: document.getElementById("hero-canvas"),
+        artboard: "Artboard",
+        layout: new rive.Layout({
+          fit: rive.Fit.Layout,
+          alignment: rive.Alignment.TopLeft,
+        }),
         autoBind: true,
         autoplay: true,
         stateMachines: "State Machine 1",
@@ -113,5 +106,8 @@
         hero.resizeDrawingSurfaceToCanvas();
       });
     </script>
+
+    <div style="height: 100vh; background-color: #1a1a1a;"></div>  
+
 </body>
 </html>
