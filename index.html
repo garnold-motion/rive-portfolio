@@ -1,39 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Elite Speakers</title>
 
     <style>
-      body {
-          background-color: #1a1a1a;
-          margin: 0;
-          padding: 0;
-          overflow-x: hidden;
-      }
 
-      /* 1. The Floating Logo */
-      .logo-container {
-        position: relative; 
-        padding: 30px 0 30px 30px;
-        width: 300px;
-        z-index: 10;
-      }
+      body { background-color: #1a1a1a; margin: 0; padding: 0; overflow-x: hidden; }
 
-      /* 2. The Hero Section (The Window) */
-      .hero-container {
-        width: 100%; 
-        height: 100vh;
-        max-height: 600px; 
-        min-height: 500px;
-        display: block;
-        overflow: hidden;
-      }
+      /* 1 Logo w Crest */
+      .logo-container { position: relative; padding: 30px 0 30px 30px; width: 300px; z-index: 10; }
 
-      canvas {
-          display: block;
-      }
+      /* 2. Hero Section Speakers */
+      .hero-container { width: 100%; height: 100vh; max-height: 600px; min-height: 500px; display: block; overflow: hidden; }
+
+      canvas { display: block; }
 
       #hero-canvas {
           width: 100%;
@@ -44,9 +28,10 @@
           width: 100%;
           height: auto;
       }
-    </style>
-</head>
 
+    </style>
+
+</head>
 
 <body>
 
@@ -59,6 +44,7 @@
     </div>
 
     <script src="https://unpkg.com/@rive-app/canvas"></script>
+
     <script>
 
       // Init Logo
@@ -78,7 +64,8 @@
 
       // Init Hero Section
       const hero = new rive.Rive({
-        src: "elite_speakers_hero_v2.riv",
+        
+        src: "elite_speakers_hero_v3.riv",
         canvas: document.getElementById("hero-canvas"),
         artboard: "Artboard",
         layout: new rive.Layout({
@@ -88,25 +75,28 @@
         autoBind: true,
         autoplay: true,
         stateMachines: "State Machine 1",
+
         onLoad: () => {
 
           hero.resizeDrawingSurfaceToCanvas();
-
+          
           const vmi = hero.viewModelInstance;
 
           if (vmi) {
-              const randomStart = Math.floor(Math.random() * 6) + 1;
-              vmi.number("numberProperty").value = randomStart;
-              console.log("ViewModel set to photo:", randomStart);
+            const randomStart = Math.floor(Math.random() * 6) + 1;
+            vmi.number("speaker").value = randomStart;
+            console.log("ViewModel set to photo:", randomStart);
           }
+
         },
 
       });
-      
+
       window.addEventListener('resize', () => {
         logo.resizeDrawingSurfaceToCanvas();
         hero.resizeDrawingSurfaceToCanvas();
       });
+      
     </script>
 
     <div style="height: 100vh; background-color: #1a1a1a;"></div>  
