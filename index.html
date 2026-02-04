@@ -1,72 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Elite Speakers</title>
 
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
     <style>
+      body { background-color: #1a1a1a; margin: 0; padding: 0; overflow-x: hidden; font-family: 'Poppins', sans-serif; }
 
-      body { background-color: #1a1a1a; margin: 0; padding: 0; overflow-x: hidden; }
-
-      /* 1 Logo w Crest */
       .logo-container { position: relative; padding: 30px 0 30px 30px; width: 300px; z-index: 10; }
 
-      /* 2. Hero Section Speakers */
-      .hero-container { width: 100%; height: 100vh; max-height: 600px; min-height: 500px; display: block; overflow: hidden; }
-
-      canvas { display: block; }
-
-      #hero-canvas {
-          width: 100%;
-          height: 100%;
+      /* Shared class for both containers */
+      .hero-container, .hero-container-2 { 
+          position: relative; 
+          width: 100%; 
+          height: 100vh; 
+          max-height: 600px; 
+          min-height: 500px; 
+          overflow: hidden;
+          margin-bottom: 50px;
       }
 
-      #logo-canvas {
-          width: 100%;
-          height: auto;
+      /* Fixed: Target all canvases properly */
+      canvas { width: 100%; height: 100%; display: block; }
+      #logo-canvas { height: auto; }
+
+      .hero-content {
+          position: absolute;
+          top: 50%;
+          left: 10%;
+          transform: translateY(-50%);
+          max-width: 450px;
+          z-index: 5;
+          color: white;
+          pointer-events: auto;
       }
 
+      .hero-content h1 {
+          font-family: 'DM Serif Display', serif;
+          font-size: 65px;
+          margin: 0 0 15px 0;
+          line-height: 1.1;
+      }
+
+      .hero-content p {
+          font-size: 25px;
+          font-weight: 600;
+          margin: 0;
+          line-height: 1.4;
+          opacity: 0.9;
+      }
     </style>
-
 </head>
 
 <body>
 
     <div class="logo-container">
-        <canvas id="logo-canvas"></canvas>
+      <canvas id="logo-canvas"></canvas>
     </div>
 
     <div class="hero-container">
-        <canvas id="hero-canvas"></canvas>
+      <canvas id="hero-canvas-1"></canvas> <div class="hero-content">
+          <h1>Welcome to Elite Speakers</h1>
+          <p>Connecting you with Australia’s best speakers, hosts and entertainers.</p>
+      </div>
     </div>
 
+    <div class="hero-container-2">
+      <canvas id="hero-canvas-2"></canvas> <div class="hero-content">
+          <h1>Welcome to Elite Speakers</h1>
+          <p>Connecting you with Australia’s best speakers, hosts and entertainers.</p>
+      </div>
+    </div>
+
+
     <script src="https://unpkg.com/@rive-app/canvas"></script>
-
     <script>
-
-      // Init Logo
+      // 1. Init Logo
       const logo = new rive.Rive({
         src: "elite_speakers_logo_v1.riv",
         canvas: document.getElementById("logo-canvas"),
         autoBind: true,
         autoplay: true,
         stateMachines: "State Machine 1",
-        layout: new rive.Layout({
-          alignment: rive.Alignment.TopLeft,
-        }),
-        onLoad: () => {
-            logo.resizeDrawingSurfaceToCanvas();
-        },
+        layout: new rive.Layout({ alignment: rive.Alignment.TopLeft }),
+        onLoad: () => { logo.resizeDrawingSurfaceToCanvas(); },
       });
 
-      // Init Hero Section
-      const hero = new rive.Rive({
-        
-        src: "elite_speakers_hero_v3.riv",
-        canvas: document.getElementById("hero-canvas"),
+      // 2. Init Hero 1 (v4)
+      const hero_1 = new rive.Rive({
+        src: "elite_speakers_hero_v4.riv",
+        canvas: document.getElementById("hero-canvas-1"),
         artboard: "Artboard",
         layout: new rive.Layout({
           fit: rive.Fit.Layout,
@@ -75,31 +101,45 @@
         autoBind: true,
         autoplay: true,
         stateMachines: "State Machine 1",
-
         onLoad: () => {
-
-          hero.resizeDrawingSurfaceToCanvas();
-          
-          const vmi = hero.viewModelInstance;
-
+          hero_1.resizeDrawingSurfaceToCanvas();
+          const vmi = hero_1.viewModelInstance;
           if (vmi) {
             const randomStart = Math.floor(Math.random() * 6) + 1;
             vmi.number("speaker").value = randomStart;
-            console.log("ViewModel set to photo:", randomStart);
           }
-
         },
+      });
 
+      // 3. Init Hero 2 (v3)
+      const hero_2 = new rive.Rive({
+        src: "elite_speakers_hero_v3.riv",
+        canvas: document.getElementById("hero-canvas-2"),
+        artboard: "Artboard",
+        layout: new rive.Layout({
+          fit: rive.Fit.Layout,
+          alignment: rive.Alignment.TopLeft,
+        }),
+        autoBind: true,
+        autoplay: true,
+        stateMachines: "State Machine 1",
+        onLoad: () => {
+          hero_2.resizeDrawingSurfaceToCanvas(); // Fixed: variable name
+          const vmi = hero_2.viewModelInstance;  // Fixed: variable name
+          if (vmi) {
+            const randomStart = Math.floor(Math.random() * 6) + 1;
+            vmi.number("speaker").value = randomStart;
+          }
+        },
       });
 
       window.addEventListener('resize', () => {
         logo.resizeDrawingSurfaceToCanvas();
-        hero.resizeDrawingSurfaceToCanvas();
+        hero_1.resizeDrawingSurfaceToCanvas();
+        hero_2.resizeDrawingSurfaceToCanvas();
       });
-      
     </script>
 
     <div style="height: 100vh; background-color: #1a1a1a;"></div>  
-
 </body>
 </html>
