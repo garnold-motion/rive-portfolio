@@ -52,6 +52,23 @@
           line-height: 1.4;
           opacity: 0.9;
       }
+
+      .portrait-mode .hero-content {
+          top: 6%; 
+          left: 50%; 
+          transform: translateX(-50%); 
+          text-align: center; 
+          max-width: 90%; 
+      }
+
+      .portrait-mode .hero-content h1 {
+          font-size: 32px; 
+      }
+
+      .portrait-mode .hero-content p {
+          font-size: 16px;
+      }
+
     </style>
 </head>
 
@@ -77,7 +94,9 @@
 
 
     <script src="https://unpkg.com/@rive-app/canvas"></script>
+
     <script>
+
       // 1. Init Logo
       const logo = new rive.Rive({
         src: "elite_speakers_logo_v1.riv",
@@ -138,8 +157,42 @@
         hero_1.resizeDrawingSurfaceToCanvas();
         hero_2.resizeDrawingSurfaceToCanvas();
       });
+
+      function updateLayoutRatio() {
+
+        const containers = [
+            { el: document.querySelector('.hero-container'), canvas: document.getElementById('hero-canvas-1') },
+            { el: document.querySelector('.hero-container-2'), canvas: document.getElementById('hero-canvas-2') }
+        ];
+
+        containers.forEach(item => {
+            if (!item.canvas) return;
+            
+            const ratio = item.canvas.clientWidth / item.canvas.clientHeight;
+
+            if (ratio < 1) {
+              item.el.classList.add('portrait-mode');
+            } else {
+              item.el.classList.remove('portrait-mode');
+            }
+        });
+      
+      }
+
+      // Call it on load and on resize
+      window.addEventListener('resize', () => {
+          logo.resizeDrawingSurfaceToCanvas();
+          hero_1.resizeDrawingSurfaceToCanvas();
+          hero_2.resizeDrawingSurfaceToCanvas();
+          updateLayoutRatio(); // Sync the text
+      });
+
+      // Run once at start
+      updateLayoutRatio();
+
     </script>
 
     <div style="height: 100vh; background-color: #1a1a1a;"></div>  
+
 </body>
 </html>
