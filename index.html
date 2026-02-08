@@ -8,25 +8,39 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
-      body { background-color: #1a1a1a; margin: 0; padding: 0; overflow-x: hidden; font-family: 'Poppins', sans-serif; }
+      body { background-color: #151818; margin: 0; padding: 0; overflow-x: hidden; font-family: 'Poppins', sans-serif; }
 
-      .logo-container { position: relative; padding: 30px 0 30px 30px; width: 300px; z-index: 10; }
+      .header-container {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        padding: 20px 0 10px 40px;
+        z-index: 10;
+        position: relative;
+      }
 
-      /* Shared class for both containers */
-      .hero-container, .hero-container-2 { 
+      .logo-box {
+        width: 250px;
+      }
+
+      .logo-box + .logo-box {
+        margin-left: -100px;
+      }
+
+      .hero-container { 
           position: relative; 
           width: 100%; 
           height: 100vh; 
           max-height: 600px; 
           min-height: 500px; 
           overflow: hidden;
-          margin-bottom: 50px;
       }
 
-      /* Fixed: Target all canvases properly */
       canvas { width: 100%; height: 100%; display: block; }
-      #logo-canvas { height: auto; }
 
+      #logo-canvas, #logo-canvas-2 { height: auto; }
+
+      /* Desktop Style */
       .hero-content {
           position: absolute;
           top: 50%;
@@ -36,6 +50,7 @@
           z-index: 5;
           color: white;
           pointer-events: auto;
+          transition: all 0.4s ease;
       }
 
       .hero-content h1 {
@@ -53,53 +68,56 @@
           opacity: 0.9;
       }
 
+      /* Portrait Style */
       .portrait-mode .hero-content {
-          top: 6%; 
+          top: 10%; 
           left: 50%; 
           transform: translateX(-50%); 
           text-align: center; 
           max-width: 90%; 
       }
+      .portrait-mode .hero-content h1 { font-size: 32px; }
+      .portrait-mode .hero-content p { font-size: 16px; }
 
-      .portrait-mode .hero-content h1 {
-          font-size: 32px; 
+      .white-spacer {
+          height: 100vh;
+          background-color: #ffffff;
+          width: 100%;
       }
-
-      .portrait-mode .hero-content p {
-          font-size: 16px;
-      }
-
     </style>
 </head>
 
 <body>
 
-    <div class="logo-container">
-      <canvas id="logo-canvas"></canvas>
+    <div class="header-container">
+      <div class="logo-box">
+        <canvas id="logo-canvas"></canvas>
+      </div>
+      <div class="logo-box">
+        <canvas id="logo-canvas-2"></canvas>
+      </div>
+      <div class="logo-box">
+        <canvas id="logo-canvas-3"></canvas>
+      </div>
     </div>
 
-    <div class="hero-container">
-      <canvas id="hero-canvas-1"></canvas> <div class="hero-content">
+    <div class="hero-container" id="main-hero">
+      <canvas id="hero-canvas-1"></canvas> 
+      <div class="hero-content">
           <h1>Welcome to Elite Speakers</h1>
           <p>Connecting you with Australia’s best speakers, hosts and entertainers.</p>
       </div>
     </div>
-
-    <div class="hero-container-2">
-      <canvas id="hero-canvas-2"></canvas> <div class="hero-content">
-          <h1>Welcome to Elite Speakers</h1>
-          <p>Connecting you with Australia’s best speakers, hosts and entertainers.</p>
-      </div>
-    </div>
-
+    
+    <div class="white-spacer"></div>
 
     <script src="https://unpkg.com/@rive-app/canvas"></script>
 
     <script>
 
-      // 1. Init Logo
+      // Logo 1
       const logo = new rive.Rive({
-        src: "elite_speakers_logo_v1.riv",
+        src: "elite_speakers_logo_v1_white.riv",
         canvas: document.getElementById("logo-canvas"),
         autoBind: true,
         autoplay: true,
@@ -108,9 +126,31 @@
         onLoad: () => { logo.resizeDrawingSurfaceToCanvas(); },
       });
 
-      // 2. Init Hero 1 (v4)
+      // Logo 2
+      const logo2 = new rive.Rive({
+        src: "elite_speakers_logo_v1.riv",
+        canvas: document.getElementById("logo-canvas-2"),
+        autoBind: true,
+        autoplay: true,
+        stateMachines: "State Machine 1",
+        layout: new rive.Layout({ alignment: rive.Alignment.TopLeft }),
+        onLoad: () => { logo2.resizeDrawingSurfaceToCanvas(); },
+      });
+
+      // Logo 3
+      const logo3 = new rive.Rive({
+        src: "elite_speakers_logo_v1_blue.riv",
+        canvas: document.getElementById("logo-canvas-3"),
+        autoBind: true,
+        autoplay: true,
+        stateMachines: "State Machine 1",
+        layout: new rive.Layout({ alignment: rive.Alignment.TopLeft }),
+        onLoad: () => { logo2.resizeDrawingSurfaceToCanvas(); },
+      });
+
+      // 2. Init Hero
       const hero_1 = new rive.Rive({
-        src: "elite_speakers_hero_v4.riv",
+        src: "elite_speakers_hero_v4.2.riv",
         canvas: document.getElementById("hero-canvas-1"),
         artboard: "Artboard",
         layout: new rive.Layout({
@@ -130,69 +170,27 @@
         },
       });
 
-      // 3. Init Hero 2 (v3)
-      const hero_2 = new rive.Rive({
-        src: "elite_speakers_hero_v3.riv",
-        canvas: document.getElementById("hero-canvas-2"),
-        artboard: "Artboard",
-        layout: new rive.Layout({
-          fit: rive.Fit.Layout,
-          alignment: rive.Alignment.TopLeft,
-        }),
-        autoBind: true,
-        autoplay: true,
-        stateMachines: "State Machine 1",
-        onLoad: () => {
-          hero_2.resizeDrawingSurfaceToCanvas(); // Fixed: variable name
-          const vmi = hero_2.viewModelInstance;  // Fixed: variable name
-          if (vmi) {
-            const randomStart = Math.floor(Math.random() * 6) + 1;
-            vmi.number("speaker").value = randomStart;
-          }
-        },
-      });
-
-      window.addEventListener('resize', () => {
-        logo.resizeDrawingSurfaceToCanvas();
-        hero_1.resizeDrawingSurfaceToCanvas();
-        hero_2.resizeDrawingSurfaceToCanvas();
-      });
-
       function updateLayoutRatio() {
-
-        const containers = [
-            { el: document.querySelector('.hero-container'), canvas: document.getElementById('hero-canvas-1') },
-            { el: document.querySelector('.hero-container-2'), canvas: document.getElementById('hero-canvas-2') }
-        ];
-
-        containers.forEach(item => {
-            if (!item.canvas) return;
-            
-            const ratio = item.canvas.clientWidth / item.canvas.clientHeight;
-
-            if (ratio < 1) {
-              item.el.classList.add('portrait-mode');
-            } else {
-              item.el.classList.remove('portrait-mode');
-            }
-        });
-      
+        const container = document.getElementById('main-hero');
+        const canvas = document.getElementById('hero-canvas-1');
+        if (!canvas || !container) return;
+        const ratio = canvas.clientWidth / canvas.clientHeight;
+        if (ratio < 1) {
+            container.classList.add('portrait-mode');
+        } else {
+            container.classList.remove('portrait-mode');
+        }
       }
 
-      // Call it on load and on resize
       window.addEventListener('resize', () => {
           logo.resizeDrawingSurfaceToCanvas();
+          logo2.resizeDrawingSurfaceToCanvas(); // Added resize for logo2
           hero_1.resizeDrawingSurfaceToCanvas();
-          hero_2.resizeDrawingSurfaceToCanvas();
-          updateLayoutRatio(); // Sync the text
+          updateLayoutRatio(); 
       });
 
-      // Run once at start
       updateLayoutRatio();
-
+      setTimeout(updateLayoutRatio, 200);
     </script>
-
-    <div style="height: 100vh; background-color: #1a1a1a;"></div>  
-
 </body>
 </html>
