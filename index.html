@@ -10,21 +10,14 @@
     <style>
       body { background-color: #151818; margin: 0; padding: 0; overflow-x: hidden; font-family: 'Poppins', sans-serif; }
 
-      .header-container {
+      .logo-box {
+        width: 300px;
         display: flex;
         align-items: center;
         gap: 0;
         padding: 20px 0 10px 40px;
         z-index: 10;
         position: relative;
-      }
-
-      .logo-box {
-        width: 250px;
-      }
-
-      .logo-box + .logo-box {
-        margin-left: -100px;
       }
 
       .hero-container { 
@@ -89,16 +82,9 @@
 
 <body>
 
-    <div class="header-container">
-      <div class="logo-box">
-        <canvas id="logo-canvas"></canvas>
-      </div>
-      <div class="logo-box">
-        <canvas id="logo-canvas-2"></canvas>
-      </div>
-      <div class="logo-box">
-        <canvas id="logo-canvas-3"></canvas>
-      </div>
+
+    <div class="logo-box">
+      <canvas id="logo-canvas"></canvas>
     </div>
 
     <div class="hero-container" id="main-hero">
@@ -117,7 +103,7 @@
 
       // Logo 1
       const logo = new rive.Rive({
-        src: "elite_speakers_logo_v1_white.riv",
+        src: "elite_speakers_logo_v1.riv",
         canvas: document.getElementById("logo-canvas"),
         autoBind: true,
         autoplay: true,
@@ -126,31 +112,8 @@
         onLoad: () => { logo.resizeDrawingSurfaceToCanvas(); },
       });
 
-      // Logo 2
-      const logo2 = new rive.Rive({
-        src: "elite_speakers_logo_v1.riv",
-        canvas: document.getElementById("logo-canvas-2"),
-        autoBind: true,
-        autoplay: true,
-        stateMachines: "State Machine 1",
-        layout: new rive.Layout({ alignment: rive.Alignment.TopLeft }),
-        onLoad: () => { logo2.resizeDrawingSurfaceToCanvas(); },
-      });
-
-      // Logo 3
-      const logo3 = new rive.Rive({
-        src: "elite_speakers_logo_v1_blue.riv",
-        canvas: document.getElementById("logo-canvas-3"),
-        autoBind: true,
-        autoplay: true,
-        stateMachines: "State Machine 1",
-        layout: new rive.Layout({ alignment: rive.Alignment.TopLeft }),
-        onLoad: () => { logo2.resizeDrawingSurfaceToCanvas(); },
-      });
-
-      // 2. Init Hero
       const hero_1 = new rive.Rive({
-        src: "elite_speakers_hero_v4.2.riv",
+        src: "elite_speakers_hero_v4.3.riv",
         canvas: document.getElementById("hero-canvas-1"),
         artboard: "Artboard",
         layout: new rive.Layout({
@@ -162,13 +125,25 @@
         stateMachines: "State Machine 1",
         onLoad: () => {
           hero_1.resizeDrawingSurfaceToCanvas();
+          
           const vmi = hero_1.viewModelInstance;
           if (vmi) {
-            const randomStart = Math.floor(Math.random() * 6) + 1;
+            // 1. Set the random speaker
+            const randomStart = Math.floor(Math.random() * 10) + 1;
             vmi.number("speaker").value = randomStart;
           }
         },
+
       });
+    
+      hero_1.on('riveevent', (event) => {
+        console.log("Rive Event Received:", event.data.name, event.data);
+
+        if (event.data.name === "clicked") {
+          console.log("Match found! Redirecting...");
+          window.location.href = "https://elitespeakers.com.au/elite-speakers-search/";
+        }
+      })
 
       function updateLayoutRatio() {
         const container = document.getElementById('main-hero');
@@ -184,7 +159,6 @@
 
       window.addEventListener('resize', () => {
           logo.resizeDrawingSurfaceToCanvas();
-          logo2.resizeDrawingSurfaceToCanvas(); // Added resize for logo2
           hero_1.resizeDrawingSurfaceToCanvas();
           updateLayoutRatio(); 
       });
