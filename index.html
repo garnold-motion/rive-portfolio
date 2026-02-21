@@ -31,6 +31,10 @@
 
       canvas { width: 100%; height: 100%; display: block; }
 
+      .is-hovering-button {
+          cursor: pointer !important;
+      }
+
       #logo-canvas, #logo-canvas-2 { height: auto; }
 
       /* Desktop Style */
@@ -42,7 +46,7 @@
           max-width: 450px;
           z-index: 5;
           color: white;
-          pointer-events: auto;
+          pointer-events: none; /* Changed to none so mouse clicks 'fall through' to the Rive button */
           transition: all 0.4s ease;
       }
 
@@ -81,8 +85,6 @@
 </head>
 
 <body>
-
-
     <div class="logo-box">
       <canvas id="logo-canvas"></canvas>
     </div>
@@ -100,6 +102,8 @@
     <script src="https://unpkg.com/@rive-app/canvas"></script>
 
     <script>
+      // Define the canvas element for the hero
+      const heroCanvas = document.getElementById("hero-canvas-1");
 
       // Logo 1
       const logo = new rive.Rive({
@@ -114,7 +118,7 @@
 
       const hero_1 = new rive.Rive({
         src: "elite_speakers_hero_v1.riv",
-        canvas: document.getElementById("hero-canvas-1"),
+        canvas: heroCanvas,
         artboard: "Artboard",
         layout: new rive.Layout({
           fit: rive.Fit.Layout,
@@ -128,22 +132,31 @@
           
           const vmi = hero_1.viewModelInstance;
           if (vmi) {
-            // 1. Set the random speaker
             const randomStart = Math.floor(Math.random() * 10) + 1;
             vmi.number("speaker").value = randomStart;
           }
         },
-
       });
     
-      hero_1.on('riveevent', (event) => {
-        console.log("Rive Event Received:", event.data.name, event.data);
 
+      hero_1.on('riveevent', (event) => {
+        console.log("Rive Event Received:", event.data.name);
+
+        // Navigation
         if (event.data.name === "clicked") {
-          console.log("Match found! Redirecting...");
+          console.log("Redirecting...");
           window.location.href = "https://elitespeakers.com.au/elite-speakers-search/";
         }
-      })
+
+        // Pointer Toggle
+        if (event.data.name === "buttonHover") {
+          heroCanvas.classList.add("is-hovering-button");
+        } 
+        
+        if (event.data.name === "buttonExit") {
+          heroCanvas.classList.remove("is-hovering-button");
+        }
+      });
 
       function updateLayoutRatio() {
         const container = document.getElementById('main-hero');
